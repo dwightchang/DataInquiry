@@ -1,0 +1,8 @@
+C:\Dropbox\MyTool\DataInquiry\TestDI\bin\Release\TestDI.dll
+C:\Dropbox\MyTool\DataInquiry\TestDI\obj\Release\ResolveAssemblyReference.cache
+C:\Dropbox\MyTool\DataInquiry\TestDI\obj\Release\TestDI.dll
+C:\Dropbox\MyTool\DataInquiry\TestDI\bin\Debug\TestDI.dll
+C:\Dropbox\MyTool\DataInquiry\TestDI\bin\Debug\TestDI.pdb
+C:\Dropbox\MyTool\DataInquiry\TestDI\obj\Debug\ResolveAssemblyReference.cache
+C:\Dropbox\MyTool\DataInquiry\TestDI\obj\Debug\TestDI.dll
+C:\Dropbox\MyTool\DataInquiry\TestDI\obj\Debug\TestDI.pdb

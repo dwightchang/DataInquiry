@@ -1,0 +1,17 @@
+
+
+[Result]
+右鍵:複製該欄位成為查詢條件
+F8: 複製欄位名稱
+F11: 匯出資料
+F12: 匯出CSV檔
+輸入文字:欄位名稱搜尋
+
+
+[SQL editor]
+F7 = highlight選取文字
+F5/F9 = 執行
+F6 = 語法輔助
+F12 = code to sql
+ctrl+click = 區塊選取
+ctrl+shift+click = 區塊選取並執行

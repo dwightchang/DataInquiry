@@ -1,0 +1,1 @@
+dev=Data Source=127.0.0.1;Initial Catalog=Company;User ID=dwight;Password=123;Connection Timeout=60
