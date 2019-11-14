@@ -172,7 +172,7 @@ namespace DataInquiry.Assistant
                 tip.InitialDelay = 100;
                 tip.ReshowDelay = 100;
                 tip.ShowAlways = true;
-                tip.SetToolTip(this.chkTransaction, "使用Transaction");
+                tip.SetToolTip(this.chkTransaction, "使用Transaction");                
             }
             catch (Exception ex)
             {
@@ -225,15 +225,8 @@ namespace DataInquiry.Assistant
             this.icsSqlEditor.ActiveTextAreaControl.TextArea.DoProcessDialogKey += TextArea_DoProcessDialogKey;
             this.icsSqlEditor.ActiveTextAreaControl.TextArea.TextChanged += TextArea_TextChanged;
             this.icsSqlEditor.ActiveTextAreaControl.TextArea.MouseUp += redSql_MouseUp;
-            this.icsSqlEditor.Document.HighlightingStrategy = ICSharpCode.TextEditor.Document.HighlightingStrategyFactory.CreateHighlightingStrategy("SQL");
-
-            // 在 TextEditor 上放一個透明 panel
-            //this.extendedPanel.Top = this.icsSqlEditor.Top;
-            //this.extendedPanel.Left = this.icsSqlEditor.Left;
-            //this.extendedPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-
-            //this.tabPage1.Controls.Add(this.extendedPanel);
-            //this.extendedPanel.BringToFront();
+            this.icsSqlEditor.Document.HighlightingStrategy = ICSharpCode.TextEditor.Document.HighlightingStrategyFactory.CreateHighlightingStrategy("SQL");            
+            
         }
 
         private bool TextArea_DoProcessDialogKey(Keys keyData)
@@ -1002,8 +995,7 @@ namespace DataInquiry.Assistant
                 Application.DoEvents();
                 GlobalClass.logTime("query", "query", "DoEvents", false);
 
-                runSqlByStatement(InqPage.DS_TYPE_GETDATA, sql, this.ddlConn.SelectedValue.ToString(), InqPage.getConnectionSilent);
-                //updateQueryResult(ds, sql);
+                runSqlByStatement(InqPage.DS_TYPE_GETDATA, sql, this.ddlConn.SelectedValue.ToString(), InqPage.getConnectionSilent);                
             }
             catch (Exception ex)
             {
@@ -2598,7 +2590,7 @@ namespace DataInquiry.Assistant
             this.edSelectedContent.Text = val;
             fireSelectedContentTextChanged = true;
 
-            messageStatus("右鍵:複製該欄位成為查詢條件，F8: 複製欄位名稱， F11: 匯出資料， F12: 匯出CSV檔，輸入文字:欄位名稱搜尋");
+            messageStatus("右鍵:複製該欄位成為查詢條件，F8: 複製欄位名稱，F10:匯出SP內容， F11: 匯出資料， F12: 匯出CSV檔，輸入文字:欄位名稱搜尋");
         }
 
         private bool changeAreProcessing = false;
@@ -2686,6 +2678,35 @@ namespace DataInquiry.Assistant
             }
 
             this.currentTableName = tableName;
+        }
+
+        private void exportSpToSqlFile()
+        {
+            if(this.currentDataGrid.Columns.Count < 2 || !this.currentDataGrid.Columns[1].Name.Equals("object_name"))
+            {
+                MessageBox.Show("無法匯出");
+                return;
+            }
+
+            selectFolder.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            if(selectFolder.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            string storePath = selectFolder.SelectedPath.TrimEnd('\\') + "\\";
+
+            DataGridViewSelectedRowCollection rows = this.currentDataGrid.SelectedRows;
+               
+            foreach(DataGridViewRow itm in rows)
+            {
+                string objectName = itm.Cells[1].Value.ToString();
+                string content = itm.Cells[4].Value.ToString();
+
+                saveFile(storePath + objectName + ".sql", content);
+            }
+
+            MessageBox.Show("匯出完成");
         }
 
         private void makeInsertStatement(string tablename)
@@ -2871,25 +2892,38 @@ namespace DataInquiry.Assistant
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                string fname = fileDialog.FileName;
-
-                System.IO.StreamWriter sw;
+                string fname = fileDialog.FileName;                
 
                 try
-                {
-                    sw = new System.IO.StreamWriter(fname, false, Encoding.UTF8);
+                {                    
+                    saveFile(fname, sb.ToString());
                 }
-                catch (IOException ioe)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("無法寫入檔案，檔案可能已被其他程序鎖住");
+                    MessageBox.Show(ex.Message);
                     return;
                 }
 
-                sw.Write(sb.ToString());
-                sw.Close();
-
                 MessageBox.Show("匯出完成");
             }
+        }
+
+        private void saveFile(string path, string content)
+        {
+            System.IO.StreamWriter sw;
+
+            try
+            {
+                using (sw = new System.IO.StreamWriter(path, false, Encoding.UTF8))
+                {
+                    sw.Write(content);
+                    sw.Close();
+                }
+            }
+            catch (IOException ioe)
+            {
+                throw new Exception("無法寫入檔案，檔案可能已被其他程序鎖住");
+            }            
         }
 
         private void dgResult_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -2901,16 +2935,11 @@ namespace DataInquiry.Assistant
         private void btnShowTables_Click(object sender, EventArgs e)
         {
             DataSet ds = null;
-
-            //ds = tableViewList;
-
-            //if (ds == null)
-            //{
+            
             string sql = "use [" + this.ddlDB.Text + "] select * from INFORMATION_SCHEMA.TABLES with(nolock) order by TABLE_TYPE, TABLE_NAME";
             sql = applyUsedDatabase(sql, this.ddlDB.Text);
 
             ds = runSqlByStatement(InqPage.DS_TYPE_TABLE_VIEW, sql, this.ddlConn.SelectedValue.ToString(), InqPage.getConnectionSilent);
-            //}
 
             updateQueryResult(ds, "");
 
@@ -2919,15 +2948,12 @@ namespace DataInquiry.Assistant
 
         private void btnShowRoutines_Click(object sender, EventArgs e)
         {
-            DataSet ds = null; // spFunctionList;
-
-            //if (ds == null)
-            //{
+            DataSet ds = null; 
+           
             string sql = "use [" + ddlDB.Text + "] select ROUTINE_SCHEMA,ROUTINE_NAME,ROUTINE_TYPE,ROUTINE_DEFINITION " +
                          "from INFORMATION_SCHEMA.ROUTINES with(nolock) order by ROUTINE_TYPE, ROUTINE_NAME";
             sql = applyUsedDatabase(sql, this.ddlDB.Text);
             ds = runSqlByStatement(InqPage.DS_TYPE_FUNC_SP, sql, this.ddlConn.SelectedValue.ToString(), InqPage.getConnectionSilent);
-            //}
 
             updateQueryResult(ds, "");
 
@@ -3243,16 +3269,7 @@ namespace DataInquiry.Assistant
                     GlobalClass.logTime("query", "query", "_queryResultUpdating", false);
                 }
                 return;
-            }
-
-            if (InqPage._engine != null)
-            {
-                this.lblConnReady.Text = "已連線";
-            }
-            else
-            {
-                this.lblConnReady.Text = "";
-            }
+            }           
 
             #region get data set
 
@@ -3608,8 +3625,7 @@ namespace DataInquiry.Assistant
                 return;
             }
 
-            updateConnectStrContent();
-            this.lblConnReady.Text = "";
+            updateConnectStrContent();            
         }
 
         private void updateConnectStrContent()
@@ -3690,11 +3706,15 @@ namespace DataInquiry.Assistant
 
         private void dgResult_KeyDown(object sender, KeyEventArgs e)
         {
-            //_holdCtrl = e.Control;
-
-            if (e.KeyCode == Keys.F11)
+            if (e.KeyCode == Keys.F10)  // SP 匯出至檔案
             {
-                string tableName = this.currentTableName; // getTableName(null);
+                exportSpToSqlFile();
+                return;
+            }
+
+            if (e.KeyCode == Keys.F11)  // 將資料轉為insert語法
+            {
+                string tableName = this.currentTableName; 
 
                 // confirm table name
                 if (this.currentDataGrid.SelectedRows.Count > 0)
@@ -3777,9 +3797,7 @@ namespace DataInquiry.Assistant
         private void dgResult_KeyUp(object sender, KeyEventArgs e)
         {
             // character
-            string input = getInput(e);
-
-            //_holdCtrl = e.Control;
+            string input = getInput(e);            
 
             if (input.Length == 1)
             {
@@ -5291,6 +5309,22 @@ BEGIN TRY
 
             Clipboard.SetText(sb.ToString());
             MessageBox.Show("OK");
+        }
+
+        private void btnSpQuery_Click(object sender, EventArgs e)
+        {
+            string sql = @"SELECT sm.object_id, OBJECT_NAME(sm.object_id) AS object_name, o.type, o.type_desc, sm.definition  
+                FROM sys.sql_modules AS sm  
+                JOIN sys.objects AS o ON sm.object_id = o.object_id  where  o.type <> 'RF' ";
+
+            string spName = this.txtSpName.Text.Trim();            
+
+            if(!spName.Equals(""))
+            {
+                sql += string.Format("and OBJECT_NAME(sm.object_id) like '%{0}%'", spName);
+            }
+
+            runSqlByStatement(InqPage.DS_TYPE_GETDATA, sql, this.ddlConn.SelectedValue.ToString(), InqPage.getConnectionSilent);
         }
     }
 }

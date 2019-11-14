@@ -35,11 +35,10 @@
             this.ddlConn = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ddlDB = new System.Windows.Forms.ComboBox();
-            this.btnShowTables = new System.Windows.Forms.Button();
-            this.btnShowRoutines = new System.Windows.Forms.Button();
             this.btnNewInquiry = new System.Windows.Forms.Button();
             this.tabInquiry = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chkTransaction = new System.Windows.Forms.CheckBox();
             this.listCodeAssist = new System.Windows.Forms.ListBox();
             this.icsSqlEditor = new ICSharpCode.TextEditor.TextEditorControl();
             this.editMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -85,7 +84,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.lblConnReady = new System.Windows.Forms.Label();
             this.btnCloseTab = new System.Windows.Forms.Button();
             this.fileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label2 = new System.Windows.Forms.Label();
@@ -93,7 +91,9 @@
             this.lblInfo = new System.Windows.Forms.Label();
             this.btnXmlFormate = new System.Windows.Forms.Button();
             this.btnTranslate = new System.Windows.Forms.Button();
-            this.chkTransaction = new System.Windows.Forms.CheckBox();
+            this.txtSpName = new System.Windows.Forms.TextBox();
+            this.btnSpQuery = new System.Windows.Forms.Button();
+            this.selectFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.tabInquiry.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.editMenu.SuspendLayout();
@@ -122,7 +122,7 @@
             this.ddlConn.FormattingEnabled = true;
             this.ddlConn.Location = new System.Drawing.Point(77, 9);
             this.ddlConn.Name = "ddlConn";
-            this.ddlConn.Size = new System.Drawing.Size(203, 21);
+            this.ddlConn.Size = new System.Drawing.Size(168, 21);
             this.ddlConn.TabIndex = 4;
             this.ddlConn.SelectedIndexChanged += new System.EventHandler(this.ddlConn_SelectedIndexChanged);
             this.ddlConn.SelectionChangeCommitted += new System.EventHandler(this.ddlConn_SelectionChangeCommitted);
@@ -144,36 +144,16 @@
             this.ddlDB.Location = new System.Drawing.Point(77, 36);
             this.ddlDB.MaxDropDownItems = 4;
             this.ddlDB.Name = "ddlDB";
-            this.ddlDB.Size = new System.Drawing.Size(120, 21);
+            this.ddlDB.Size = new System.Drawing.Size(168, 21);
             this.ddlDB.TabIndex = 12;
             this.ddlDB.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ddlDB_DrawItem);
             this.ddlDB.SelectedIndexChanged += new System.EventHandler(this.ddlDB_SelectedIndexChanged);
             this.ddlDB.SelectionChangeCommitted += new System.EventHandler(this.ddlDB_SelectionChangeCommitted);
             this.ddlDB.Click += new System.EventHandler(this.ddlDB_Click);
             // 
-            // btnShowTables
-            // 
-            this.btnShowTables.Location = new System.Drawing.Point(204, 36);
-            this.btnShowTables.Name = "btnShowTables";
-            this.btnShowTables.Size = new System.Drawing.Size(76, 23);
-            this.btnShowTables.TabIndex = 13;
-            this.btnShowTables.Text = "Table";
-            this.btnShowTables.UseVisualStyleBackColor = true;
-            this.btnShowTables.Click += new System.EventHandler(this.btnShowTables_Click);
-            // 
-            // btnShowRoutines
-            // 
-            this.btnShowRoutines.Location = new System.Drawing.Point(286, 35);
-            this.btnShowRoutines.Name = "btnShowRoutines";
-            this.btnShowRoutines.Size = new System.Drawing.Size(63, 23);
-            this.btnShowRoutines.TabIndex = 15;
-            this.btnShowRoutines.Text = "SP";
-            this.btnShowRoutines.UseVisualStyleBackColor = true;
-            this.btnShowRoutines.Click += new System.EventHandler(this.btnShowRoutines_Click);
-            // 
             // btnNewInquiry
             // 
-            this.btnNewInquiry.Location = new System.Drawing.Point(364, 7);
+            this.btnNewInquiry.Location = new System.Drawing.Point(513, 7);
             this.btnNewInquiry.Name = "btnNewInquiry";
             this.btnNewInquiry.Size = new System.Drawing.Size(75, 23);
             this.btnNewInquiry.TabIndex = 14;
@@ -226,6 +206,18 @@
             this.tabPage1.Text = "SQL";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // chkTransaction
+            // 
+            this.chkTransaction.AutoSize = true;
+            this.chkTransaction.Checked = true;
+            this.chkTransaction.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTransaction.Location = new System.Drawing.Point(838, 7);
+            this.chkTransaction.Name = "chkTransaction";
+            this.chkTransaction.Size = new System.Drawing.Size(46, 16);
+            this.chkTransaction.TabIndex = 24;
+            this.chkTransaction.Text = "Tran";
+            this.chkTransaction.UseVisualStyleBackColor = true;
+            // 
             // listCodeAssist
             // 
             this.listCodeAssist.FormattingEnabled = true;
@@ -241,6 +233,7 @@
             // 
             // icsSqlEditor
             // 
+            this.icsSqlEditor.BackColor = System.Drawing.Color.Transparent;
             this.icsSqlEditor.ContextMenuStrip = this.editMenu;
             this.icsSqlEditor.IsReadOnly = false;
             this.icsSqlEditor.Location = new System.Drawing.Point(10, 34);
@@ -634,7 +627,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(526, 36);
+            this.btnCancel.Location = new System.Drawing.Point(595, 36);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(74, 23);
             this.btnCancel.TabIndex = 8;
@@ -644,7 +637,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(445, 36);
+            this.button2.Location = new System.Drawing.Point(514, 36);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
@@ -672,17 +665,9 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // lblConnReady
-            // 
-            this.lblConnReady.AutoSize = true;
-            this.lblConnReady.Location = new System.Drawing.Point(446, 11);
-            this.lblConnReady.Name = "lblConnReady";
-            this.lblConnReady.Size = new System.Drawing.Size(0, 12);
-            this.lblConnReady.TabIndex = 19;
-            // 
             // btnCloseTab
             // 
-            this.btnCloseTab.Location = new System.Drawing.Point(526, 7);
+            this.btnCloseTab.Location = new System.Drawing.Point(595, 7);
             this.btnCloseTab.Name = "btnCloseTab";
             this.btnCloseTab.Size = new System.Drawing.Size(75, 23);
             this.btnCloseTab.TabIndex = 10;
@@ -701,7 +686,7 @@
             // lblConnCnt
             // 
             this.lblConnCnt.AutoSize = true;
-            this.lblConnCnt.Location = new System.Drawing.Point(701, 41);
+            this.lblConnCnt.Location = new System.Drawing.Point(770, 41);
             this.lblConnCnt.Name = "lblConnCnt";
             this.lblConnCnt.Size = new System.Drawing.Size(33, 12);
             this.lblConnCnt.TabIndex = 21;
@@ -711,7 +696,7 @@
             // lblInfo
             // 
             this.lblInfo.AutoSize = true;
-            this.lblInfo.Location = new System.Drawing.Point(710, 11);
+            this.lblInfo.Location = new System.Drawing.Point(779, 11);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(24, 12);
             this.lblInfo.TabIndex = 22;
@@ -719,7 +704,7 @@
             // 
             // btnXmlFormate
             // 
-            this.btnXmlFormate.Location = new System.Drawing.Point(609, 7);
+            this.btnXmlFormate.Location = new System.Drawing.Point(678, 7);
             this.btnXmlFormate.Name = "btnXmlFormate";
             this.btnXmlFormate.Size = new System.Drawing.Size(75, 23);
             this.btnXmlFormate.TabIndex = 24;
@@ -732,7 +717,7 @@
             // 
             // btnTranslate
             // 
-            this.btnTranslate.Location = new System.Drawing.Point(609, 36);
+            this.btnTranslate.Location = new System.Drawing.Point(678, 36);
             this.btnTranslate.Name = "btnTranslate";
             this.btnTranslate.Size = new System.Drawing.Size(75, 23);
             this.btnTranslate.TabIndex = 25;
@@ -741,28 +726,38 @@
             this.btnTranslate.Visible = false;
             this.btnTranslate.Click += new System.EventHandler(this.dgResultTranslate);
             // 
-            // chkTransaction
+            // txtSpName
             // 
-            this.chkTransaction.AutoSize = true;
-            this.chkTransaction.Checked = true;
-            this.chkTransaction.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTransaction.Location = new System.Drawing.Point(838, 7);
-            this.chkTransaction.Name = "chkTransaction";
-            this.chkTransaction.Size = new System.Drawing.Size(46, 16);
-            this.chkTransaction.TabIndex = 24;
-            this.chkTransaction.Text = "Tran";
-            this.chkTransaction.UseVisualStyleBackColor = true;
+            this.txtSpName.Location = new System.Drawing.Point(253, 36);
+            this.txtSpName.Name = "txtSpName";
+            this.txtSpName.Size = new System.Drawing.Size(136, 22);
+            this.txtSpName.TabIndex = 26;
+            // 
+            // btnSpQuery
+            // 
+            this.btnSpQuery.Location = new System.Drawing.Point(395, 34);
+            this.btnSpQuery.Name = "btnSpQuery";
+            this.btnSpQuery.Size = new System.Drawing.Size(75, 23);
+            this.btnSpQuery.TabIndex = 27;
+            this.btnSpQuery.Text = "SP查詢";
+            this.btnSpQuery.UseVisualStyleBackColor = true;
+            this.btnSpQuery.Click += new System.EventHandler(this.btnSpQuery_Click);
+            // 
+            // selectFolder
+            // 
+            this.selectFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
             // InqPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSpQuery);
+            this.Controls.Add(this.txtSpName);
             this.Controls.Add(this.btnTranslate);
             this.Controls.Add(this.btnXmlFormate);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnCloseTab);
-            this.Controls.Add(this.lblConnReady);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lblConnCnt);
             this.Controls.Add(this.statusStrip1);
@@ -770,8 +765,6 @@
             this.Controls.Add(this.tabInquiry);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.btnNewInquiry);
-            this.Controls.Add(this.btnShowTables);
-            this.Controls.Add(this.btnShowRoutines);
             this.Controls.Add(this.ddlDB);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.ddlConn);
@@ -806,8 +799,6 @@
         private System.Windows.Forms.ComboBox ddlConn;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox ddlDB;
-        private System.Windows.Forms.Button btnShowTables;
-        private System.Windows.Forms.Button btnShowRoutines;
         private System.Windows.Forms.Button btnNewInquiry;
         private System.Windows.Forms.TabControl tabInquiry;
         private System.Windows.Forms.TabPage tabPage1;
@@ -827,7 +818,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label lblConnReady;
         private System.Windows.Forms.Button btnLoadSql;
         private System.Windows.Forms.Button btnCloseTab;
         private System.Windows.Forms.ContextMenuStrip editMenu;
@@ -865,5 +855,8 @@
         private System.Windows.Forms.TextBox edSqlMessage;
         private System.Windows.Forms.ToolStripMenuItem 產生SPToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkTransaction;
+        private System.Windows.Forms.TextBox txtSpName;
+        private System.Windows.Forms.Button btnSpQuery;
+        private System.Windows.Forms.FolderBrowserDialog selectFolder;
     }
 }
