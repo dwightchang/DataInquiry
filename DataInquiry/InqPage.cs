@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace DataInquiry.Assistant
 {
@@ -370,12 +371,9 @@ namespace DataInquiry.Assistant
             dg.RowHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
             dg.RowHeadersDefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
             dg.EditMode = DataGridViewEditMode.EditOnF2;
-            dg.ScrollBars = ScrollBars.Both;
-            //dg.Width = tabPage2.Width;
-            //dg.Height = tabPage2.Height;
-            //dg.MaximumSize = new Size(tabPage2.Width, tabPage2.Height);
-            //dg.MinimumSize = new Size(dg.Width, tabPage2.Height);
+            dg.ScrollBars = ScrollBars.Both;            
             dg.AllowUserToAddRows = false;
+            dg.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
 
             // events
             dg.CellClick += new DataGridViewCellEventHandler(dgResult_CellClick);
@@ -3792,6 +3790,23 @@ namespace DataInquiry.Assistant
             {
                 listCandidate.Visible = false;
             }
+
+            //if(e.Control && e.KeyCode == Keys.C)
+            //{
+                
+            //    foreach(DataGridViewRow selectedRow in currentDataGrid.SelectedRows)
+            //    {
+            //        foreach(DataGridViewCell cell in selectedRow.Cells)
+            //        {
+            //            if(!cell.Selected)
+            //            {
+            //                continue;
+            //            }
+
+
+            //        }
+            //    }
+            //}
         }
 
         private void dgResult_KeyUp(object sender, KeyEventArgs e)
